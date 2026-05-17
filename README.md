@@ -4,12 +4,6 @@
 
 ---
 
-## 📸 Screenshots
-
-*Upload the sample_data.csv and screenshot the results dashboard here.*
-
----
-
 ## 🎯 Problem Statement
 
 Real-world datasets are riddled with hidden biases, imbalanced classes, and data quality issues that silently corrupt machine learning models. Data scientists spend 80% of their time on data preparation, yet systematic bias detection is rarely done before modelling. DataLens automates the entire audit pipeline — from EDA to executive briefing — so you can move from raw CSV to actionable insights in seconds.
@@ -22,8 +16,8 @@ Real-world datasets are riddled with hidden biases, imbalanced classes, and data
 2. **Backend** runs the 8-check bias audit pipeline (class imbalance, missing data patterns, sampling bias, near-duplicate columns, low variance, small sample size, datetime gaps, outlier density)
 3. **Correlation matrix** flags high-correlation pairs that may indicate data leakage
 4. **Quality score** (0–100) is computed from missing data and bias findings
-5. **Gemini 1.5 Flash** generates a 3-paragraph executive briefing in natural language
-6. **Dashboard** renders all results with interactive charts, a correlation heatmap, and collapsible recommendations
+5. **Groq Llama 3.3 70B** generates a 3-paragraph executive briefing in natural language instantly
+6. **Dashboard** renders all results with interactive charts, a correlation heatmap, and collapsible recommendations in a stunning Deep Navy & Teal UI
 
 ---
 
@@ -32,10 +26,10 @@ Real-world datasets are riddled with hidden biases, imbalanced classes, and data
 - 🔍 **Automated EDA** — statistics, histograms, and top value distributions for every column
 - ⚖️ **8-Check Bias Audit** — class imbalance, missing data patterns, sampling bias, data leakage, low variance, small sample size, datetime gaps, outlier density
 - 🔥 **Interactive Correlation Heatmap** — Pearson matrix with color scale and warning highlights
-- 🤖 **AI Data Story** — Gemini 1.5 Flash executive briefing (3 paragraphs, professional tone)
+- 🤖 **AI Data Story** — Groq Llama 3.3 70B executive briefing (3 paragraphs, professional tone, blazing fast)
 - 🏆 **Quality Score** — 0–100 with letter grade A/B/C/D/F
 - 📊 **Column Explorer** — tabs per column, Recharts bar charts, missing % progress bars
-- 🌙 **Dark-themed dashboard** — indigo primary on slate-950 background
+- 🌙 **Deep Navy & Teal Theme** — A unique, custom-designed dark mode interface
 - 📱 **Fully responsive** — works on mobile (375px) to 4K desktop
 - 🐳 **Docker Compose** — one command to run everything
 
@@ -52,7 +46,7 @@ Real-world datasets are riddled with hidden biases, imbalanced classes, and data
 cd datalens/backend
 pip install -r requirements.txt
 cp .env.example .env
-# Edit .env and set GEMINI_API_KEY=your_actual_key
+# Edit .env and set GROQ_API_KEY=your_actual_key
 uvicorn app.main:app --reload --port 8000
 ```
 
@@ -69,15 +63,15 @@ npm run dev
 ```bash
 cd datalens
 cp backend/.env.example backend/.env
-# Edit backend/.env and set GEMINI_API_KEY=your_actual_key
+# Edit backend/.env and set GROQ_API_KEY=your_actual_key
 docker-compose up --build
 # Open http://localhost:80
 ```
 
-### Get a Gemini API Key
-1. Go to [Google AI Studio](https://aistudio.google.com/app/apikey)
-2. Create a new API key
-3. Add to `backend/.env`: `GEMINI_API_KEY=your_key_here`
+### Get a Groq API Key
+1. Go to [Groq Console](https://console.groq.com/keys)
+2. Create a new, free API key
+3. Add to `backend/.env`: `GROQ_API_KEY=your_key_here`
 
 ---
 
@@ -88,45 +82,9 @@ docker-compose up --build
 | Frontend | React 18, Vite 5, Tailwind CSS 3, Recharts |
 | Backend | FastAPI, Uvicorn, Python 3.11 |
 | Data Analysis | Pandas, NumPy, SciPy, scikit-learn |
-| AI Layer | Google Gemini 1.5 Flash (via REST) |
+| AI Layer | Groq Llama 3.3 70B (via REST) |
 | HTTP Client | HTTPX |
 | Containerization | Docker, Docker Compose, Nginx |
-
----
-
-## 📡 Sample API Response
-
-```json
-{
-  "metadata": {
-    "row_count": 150,
-    "column_count": 12,
-    "memory_mb": 0.0388,
-    "columns": [{"name": "age", "type": "numeric"}, ...]
-  },
-  "eda": [
-    {
-      "column": "math_score",
-      "type": "numeric",
-      "stats": {"mean": 65.2, "median": 64.8, "std": 14.9, "skewness": 0.12, ...},
-      "histogram": [{"bin_label": "20.00–28.00", "count": 3}, ...],
-      "top_values": []
-    }
-  ],
-  "correlations": [{"col_a": "math_score", "col_b": "science_score", "value": 0.929}],
-  "high_correlation_warnings": [{"col_a": "math_score", "col_b": "science_score", "value": 0.929}],
-  "bias_audit": [
-    {
-      "check_name": "Class Imbalance",
-      "severity": "critical",
-      "finding": "Column 'school_type': 'urban' accounts for 94.7% of values",
-      "recommendation": "Apply SMOTE or stratified sampling..."
-    }
-  ],
-  "quality_score": {"score": 66, "grade": "D", "summary": "Poor data quality..."},
-  "data_story": "This dataset represents student performance..."
-}
-```
 
 ---
 
@@ -139,7 +97,7 @@ datalens/
 │   │   ├── __init__.py
 │   │   ├── main.py          # FastAPI app, CORS, /api/analyze
 │   │   ├── analyzer.py      # 8-check bias audit pipeline
-│   │   └── gemini_client.py # Gemini REST client
+│   │   └── gemini_client.py # Groq Llama-3.3-70b API integration
 │   ├── requirements.txt
 │   ├── Dockerfile
 │   └── .env.example
