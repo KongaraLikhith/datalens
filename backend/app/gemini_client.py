@@ -86,3 +86,53 @@ async def generate_data_story(
         return f"AI story generation failed (HTTP {exc.response.status_code}): {exc.response.text[:200]}"
     except Exception as exc:  # noqa: BLE001
         return f"AI story generation failed: {exc}"
+
+
+async def chat_with_data(messages: list[dict], context: str) -> str:
+    """Chat with the dataset context using Groq Llama-3.3-70B."""
+    if not GROQ_API_KEY:
+        return "AI chat unavailable — add GROQ_API_KEY to backend/.env."
+
+    system_prompt = (
+        "You are an expert Data Science AI Tutor. You help beginners understand their dataset "
+        "and any biases found in it. Always provide helpful, simple explanations. "
+        "If they ask for code, write clean Python/Pandas code. Keep your responses concise. "
+        f"\n\nDATASET CONTEXT:\n{context}"
+    )
+
+    formatted_messages = [{"role": "system", "content": system_prompt}]
+    
+    # Map frontend roles to Groq roles
+    for msg in messages:
+        role = msg.get("role", "user")
+        if role not in ["user", "assistant", "system"]:
+            role = "user"
+        formatted_messages.append({
+            "role": role,
+            "content": msg.get("content", "")
+        })
+
+    payload = {
+        "model": GROQ_MODEL,
+        "messages": formatted_messages,
+        "temperature": 0.7,
+        "max_tokens": 1000,
+    }
+
+    try:
+        async with httpx.AsyncClient(timeout=45.0) as client:
+            response = await client.post(
+                GROQ_URL,
+                headers={
+                    "Authorization": f"Bearer {GROQ_API_KEY}",
+                    "Content-Type": "application/json",
+                },
+                json=payload,
+            )
+            response.raise_for_status()
+            data = response.json()
+            return data["choices"][0]["message"]["content"].strip()
+    except httpx.HTTPStatusError as exc:
+        return f"Chat failed (HTTP {exc.response.status_code}): {exc.response.text[:200]}"
+    except Exception as exc:
+        return f"Chat failed: {exc}"

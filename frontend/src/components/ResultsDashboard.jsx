@@ -1,3 +1,4 @@
+import Chatbot from './Chatbot'
 import OverviewCards from './OverviewCards'
 import DataStory from './DataStory'
 import BiasAudit from './BiasAudit'
@@ -24,6 +25,15 @@ export default function ResultsDashboard({ data, fileName, onReset }) {
   const { metadata, eda, correlations, high_correlation_warnings, bias_audit, quality_score, data_story } = data
   const grade = quality_score.grade
   const scoreClass = GRADE_SCORE_CLASS(grade)
+
+
+  const chatbotContext = JSON.stringify({
+    fileName,
+    metadata,
+    quality_score,
+    bias_audit,
+    eda_summary: eda.map(e => ({ column: e.column, type: e.type, stats: e.stats }))
+  })
 
   return (
     <div>
@@ -54,6 +64,7 @@ export default function ResultsDashboard({ data, fileName, onReset }) {
             Grade {grade} · {quality_score.score}/100
           </div>
 
+
           <button
             id="analyze-another-btn"
             onClick={onReset}
@@ -72,7 +83,6 @@ export default function ResultsDashboard({ data, fileName, onReset }) {
       {/* Dashboard content */}
       <div className="max-w-7xl mx-auto px-4 py-8 space-y-6">
 
-        {/* Section 1: Overview Cards */}
         <section>
           <OverviewCards
             metadata={metadata}
@@ -81,24 +91,20 @@ export default function ResultsDashboard({ data, fileName, onReset }) {
           />
         </section>
 
-        {/* Section 2: AI Data Story */}
         {data_story && (
           <section>
             <DataStory story={data_story} />
           </section>
         )}
 
-        {/* Section 3: Bias Audit */}
         <section>
           <BiasAudit biasAudit={bias_audit} />
         </section>
 
-        {/* Section 4: Column Explorer */}
         <section>
           <ColumnExplorer eda={eda} />
         </section>
 
-        {/* Section 5: Correlation Heatmap */}
         <section>
           <CorrelationHeatmap
             correlations={correlations}
@@ -107,7 +113,6 @@ export default function ResultsDashboard({ data, fileName, onReset }) {
           />
         </section>
 
-        {/* Section 6: High Correlation Warnings */}
         {high_correlation_warnings?.length > 0 && (
           <section>
             <HighCorrelationWarnings warnings={high_correlation_warnings} />
@@ -119,6 +124,8 @@ export default function ResultsDashboard({ data, fileName, onReset }) {
           DataLens · AI-Powered Dataset Auditor · Powered by Groq Llama 3.3 70B + FastAPI
         </footer>
       </div>
+      
+      <Chatbot context={chatbotContext} />
     </div>
   )
 }

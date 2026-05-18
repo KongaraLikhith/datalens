@@ -53,3 +53,19 @@ async def analyze(file: UploadFile = File(...)):
         ) from exc
 
     return result
+
+from pydantic import BaseModel
+from app.gemini_client import chat_with_data
+
+class ChatRequest(BaseModel):
+    messages: list[dict]
+    context: str
+
+@app.post("/api/chat")
+async def chat(request: ChatRequest):
+    try:
+        response = await chat_with_data(request.messages, request.context)
+        return {"response": response}
+    except Exception as exc:
+        traceback.print_exc()
+        raise HTTPException(status_code=500, detail=f"Chat failed: {exc}") from exc

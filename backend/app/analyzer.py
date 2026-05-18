@@ -256,6 +256,11 @@ def run_bias_audit(df: pd.DataFrame, metadata: dict, correlations: list[dict]) -
                             f"Apply oversampling (SMOTE) or undersampling before training. "
                             f"Consider whether '{col}' can be a reliable feature."
                         ),
+                        "code_fix": (
+                            f"from imblearn.over_sampling import SMOTE\n"
+                            f"smote = SMOTE()\n"
+                            f"# X_resampled, y_resampled = smote.fit_resample(X, df['{col}'])"
+                        ),
                     }
                 )
             elif top_pct > 80:
@@ -270,6 +275,10 @@ def run_bias_audit(df: pd.DataFrame, metadata: dict, correlations: list[dict]) -
                         "recommendation": (
                             "Monitor model performance across minority classes. "
                             "Consider stratified sampling."
+                        ),
+                        "code_fix": (
+                            f"from sklearn.model_selection import train_test_split\n"
+                            f"# X_train, X_test, y_train, y_test = train_test_split(X, df['{col}'], stratify=df['{col}'])"
                         ),
                     }
                 )
@@ -293,6 +302,13 @@ def run_bias_audit(df: pd.DataFrame, metadata: dict, correlations: list[dict]) -
                     "recommendation": (
                         "Investigate why values are missing. Use imputation (median/mode) "
                         "or consider dropping the column if >70% missing."
+                    ),
+                    "code_fix": (
+                        f"if {missing_pct:.1f} > 70:\n"
+                        f"    df = df.drop(columns=['{col}'])\n"
+                        f"else:\n"
+                        f"    val = df['{col}'].median() if pd.api.types.is_numeric_dtype(df['{col}']) else df['{col}'].mode()[0]\n"
+                        f"    df['{col}'] = df['{col}'].fillna(val)"
                     ),
                 }
             )
@@ -363,6 +379,7 @@ def run_bias_audit(df: pd.DataFrame, metadata: dict, correlations: list[dict]) -
                         "Drop one of these columns before modelling to prevent leakage "
                         "and multicollinearity."
                     ),
+                    "code_fix": f"df = df.drop(columns=['{entry['col_b']}'])",
                 }
             )
 
@@ -491,6 +508,12 @@ def run_bias_audit(df: pd.DataFrame, metadata: dict, correlations: list[dict]) -
                         "recommendation": (
                             "Apply robust scaling (RobustScaler) or winsorize the column. "
                             "Investigate whether outliers are genuine or data-entry errors."
+                        ),
+                        "code_fix": (
+                            f"import numpy as np\n"
+                            f"lower = df['{col}'].quantile(0.01)\n"
+                            f"upper = df['{col}'].quantile(0.99)\n"
+                            f"df['{col}'] = np.clip(df['{col}'], lower, upper)"
                         ),
                     }
                 )
