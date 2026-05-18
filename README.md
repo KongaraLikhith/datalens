@@ -2,6 +2,8 @@
 
 > Upload any dataset. Uncover hidden biases in seconds.
 
+**Live Demo:** https://datalens-183365849263.us-central1.run.app/
+
 ---
 
 ## 🎯 Problem Statement
@@ -148,6 +150,7 @@ datalens/
 │   ├── nginx.conf
 │   ├── vite.config.js
 │   └── package.json
+├── Dockerfile               # Multi-stage build (frontend + backend unified)
 ├── docker-compose.yml
 ├── generate_sample_data.py
 └── README.md
