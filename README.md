@@ -38,9 +38,9 @@ Real-world datasets are riddled with hidden biases, imbalanced classes, and data
 
 ---
 
-## 🚀 Setup Instructions
+## Setup Instructions
 
-### Option 1: Local Development (Recommended for dev)
+### Option 1: Local Development
 
 **Prerequisites**: Python 3.11+, Node.js 20+
 
@@ -71,14 +71,36 @@ docker-compose up --build
 # Open http://localhost:80
 ```
 
+### Option 3: Google Cloud Run (Production)
+
+This project uses a multi-stage Docker build. The frontend is compiled and served directly from the FastAPI backend — no separate frontend server needed.
+
+Run the following commands in **Google Cloud Shell** with your project ID:
+
+```bash
+# 1. Clone the repository
+git clone https://github.com/KongaraLikhith/datalens.git
+cd datalens
+
+# 2. Deploy to Cloud Run (replace YOUR_GROQ_API_KEY with your actual key)
+gcloud run deploy datalens \
+  --source . \
+  --region us-central1 \
+  --allow-unauthenticated \
+  --set-env-vars GROQ_API_KEY=YOUR_GROQ_API_KEY \
+  --project datalens-496715
+```
+
+Cloud Run will build the Docker image, push it to Artifact Registry, and give you a public HTTPS URL automatically.
+
 ### Get a Groq API Key
 1. Go to [Groq Console](https://console.groq.com/keys)
 2. Create a new, free API key
-3. Add to `backend/.env`: `GROQ_API_KEY=your_key_here`
+3. Use it in the `--set-env-vars` flag when deploying to Cloud Run
 
 ---
 
-## 🛠 Tech Stack
+## Tech Stack
 
 | Layer | Technology |
 |-------|-----------|
@@ -87,7 +109,7 @@ docker-compose up --build
 | Data Analysis | Pandas, NumPy, SciPy, scikit-learn |
 | AI Layer | Groq Llama 3.3 70B (via REST) |
 | HTTP Client | HTTPX |
-| Containerization | Docker, Docker Compose, Nginx |
+| Containerization | Docker multi-stage build, Google Cloud Run |
 
 ---
 

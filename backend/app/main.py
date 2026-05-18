@@ -1,10 +1,14 @@
 """DataLens FastAPI application."""
 import io
+import os
 import traceback
+from pathlib import Path
 
 import pandas as pd
 from fastapi import FastAPI, File, HTTPException, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import FileResponse
+from fastapi.staticfiles import StaticFiles
 
 from app.analyzer import analyze_dataframe
 
@@ -69,3 +73,15 @@ async def chat(request: ChatRequest):
     except Exception as exc:
         traceback.print_exc()
         raise HTTPException(status_code=500, detail=f"Chat failed: {exc}") from exc
+
+
+# Serve built React frontend (only present in Docker/production build)
+STATIC_DIR = Path(__file__).parent.parent / "static"
+
+if STATIC_DIR.exists():
+    app.mount("/assets", StaticFiles(directory=str(STATIC_DIR / "assets")), name="assets")
+
+    @app.get("/{full_path:path}")
+    async def serve_frontend(full_path: str):
+        index = STATIC_DIR / "index.html"
+        return FileResponse(str(index))
