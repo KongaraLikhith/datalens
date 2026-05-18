@@ -40,6 +40,19 @@ Real-world datasets are riddled with hidden biases, imbalanced classes, and data
 
 ---
 
+## 📸 Screenshots
+
+<p align="center">
+  <img src="screenshots/ss1.png" width="48%" />
+  <img src="screenshots/ss2.png" width="48%" />
+</p>
+<p align="center">
+  <img src="screenshots/ss3.png" width="48%" />
+  <img src="screenshots/ss4.png" width="48%" />
+</p>
+
+---
+
 ## Setup Instructions
 
 ### Option 1: Local Development
