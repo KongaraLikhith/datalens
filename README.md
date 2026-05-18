@@ -3,6 +3,7 @@
 > Upload any dataset. Uncover hidden biases in seconds.
 
 **Live Demo:** https://datalens-183365849263.us-central1.run.app/
+**Demo Video:** https://youtu.be/P2TsOaaFS3o
 
 ---
 
