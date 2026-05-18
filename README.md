@@ -27,6 +27,9 @@ Real-world datasets are riddled with hidden biases, imbalanced classes, and data
 - ⚖️ **8-Check Bias Audit** — class imbalance, missing data patterns, sampling bias, data leakage, low variance, small sample size, datetime gaps, outlier density
 - 🔥 **Interactive Correlation Heatmap** — Pearson matrix with color scale and warning highlights
 - 🤖 **AI Data Story** — Groq Llama 3.3 70B executive briefing (3 paragraphs, professional tone, blazing fast)
+- **AI Chatbot Assistant** — Interactive chat window to ask questions about the dataset findings directly
+- **ELI5 Tooltips** — Beginner-friendly "Explain Like I'm 5" definitions for complex data science terminology
+- **Python Quick Fixes** — Actionable code snippets provided for detected bias and data quality issues
 - 🏆 **Quality Score** — 0–100 with letter grade A/B/C/D/F
 - 📊 **Column Explorer** — tabs per column, Recharts bar charts, missing % progress bars
 - 🌙 **Deep Navy & Teal Theme** — A unique, custom-designed dark mode interface
@@ -114,7 +117,8 @@ datalens/
 │   │   │   ├── BiasAudit.jsx
 │   │   │   ├── ColumnExplorer.jsx
 │   │   │   ├── CorrelationHeatmap.jsx
-│   │   │   └── HighCorrelationWarnings.jsx
+│   │   │   ├── HighCorrelationWarnings.jsx
+│   │   │   └── Chatbot.jsx
 │   │   ├── App.jsx
 │   │   ├── main.jsx
 │   │   └── index.css
